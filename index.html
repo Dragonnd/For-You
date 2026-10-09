@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pertanyaan Untukmu</title>
+    <style>
+        /* background */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #fbc531 0%, #f8a5c2 40%, #f78fb3 100%);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        /* Container Utama */
+        .container {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        /* Kartu Glassmorphism */
+        .card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 40px 30px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            width: 340px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+        }
+
+        h2 {
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 22px;
+        }
+
+        /* Gaya Form Input Nama */
+        .input-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 12px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        input[type="text"]:focus {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+        }
+
+        /* Gaya Tombol */
+        .btn {
+            padding: 12px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.45);
+            transform: scale(1.05);
+        }
+
+        /* Area Pilihan Ya/Tidak */
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+            height: 50px;
+            margin-top: 10px;
+        }
+
+        .btn-ya {
+            background: #ffffff;
+            color: #f78fb3;
+            border: none;
+            box-shadow: 0 5px 15px rgba(247, 143, 179, 0.4);
+        }
+
+        .btn-ya:hover {
+            background: #fff;
+            color: #f78fb3;
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.8);
+        }
+
+        .btn-tidak {
+            position: absolute;
+            transition: all 0.2s ease;
+        }
+
+        /* Hati Rapi Sempurna */
+        .heart-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
+            animation: pulse 1s infinite alternate ease-in-out;
+        }
+
+        .heart-shape {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: #ffffff;
+            top: 15px;
+            left: 20px;
+            transform: rotate(-45deg);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+        }
+
+        .heart-shape::before,
+        .heart-shape::after {
+            content: "";
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+
+        .heart-shape::before { top: -30px; left: 0; }
+        .heart-shape::after { top: 0; left: 30px; }
+
+        .heart-text {
+            position: absolute;
+            width: 100%;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #f78fb3;
+            font-size: 9px;
+            font-weight: bold;
+            z-index: 2;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            100% { transform: scale(1.05); }
+        }
+
+        /* Elemen Kelopak Berguguran */
+        .petal {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 150% 0 150% 150%;
+            pointer-events: none;
+            animation: fadeAnimation linear infinite;
+        }
+
+        @keyframes fadeAnimation {
+            0% { transform: translate(0, -10px) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.4; }
+            100% { transform: translate(100px, 105vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="petal-container"></div>
+
+    <div class="container">
+        <div class="card" id="mainCard">
+            <!-- Tahap 1: Input Nama -->
+            <div class="input-group" id="step1">
+                <h2>Masukkan Namamu ✨</h2>
+                <input type="text" id="namaInput" placeholder="Ketik namamu di sini..." autocomplete="off">
+                <button class="btn" id="btnLanjut">Lanjut</button>
+            </div>
+
+            <!-- Tahap 2: Pertanyaan (Disembunyikan di awal) -->
+            <div class="input-group" id="step2" style="display: none;">
+                <h2 id="pertanyaanTeks">Hai, masih sayang aku ga?</h2>
+                <div class="btn-group">
+                    <button class="btn btn-ya" id="btnYa">Ya!</button>
+                    <button class="btn btn-tidak" id="btnTidak">Tidak</button>
+                </div>
+            </div>
+
+            <!-- Tahap 3: Hasil Akhir (Disembunyikan di awal) -->
+            <div class="input-group" id="step3" style="display: none;">
+                <h2 id="pesanAkhir">I Love You Too! 💖</h2>
+                <div class="heart-wrapper">
+                    <div class="heart-shape"></div>
+                    <div class="heart-text">I Love You</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        const namaInput = document.getElementById('namaInput');
+        const btnLanjut = document.getElementById('btnLanjut');
+        const btnYa = document.getElementById('btnYa');
+        const btnTidak = document.getElementById('btnTidak');
+        const pertanyaanTeks = document.getElementById('pertanyaanTeks');
+        const pesanAkhir = document.getElementById('pesanAkhir');
+        const petalContainer = document.getElementById('petal-container');
+
+        let namaPengguna = "";
+
+        // Fungsi Kelopak Bunga Gugur
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            const size = Math.random() * 15 + 10;
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            petal.style.left = `${Math.random() * window.innerWidth}px`;
+            petal.style.animationDuration = `${Math.random() * 4 + 4}s`;
+            petalContainer.appendChild(petal);
+            setTimeout(() => { petal.remove(); }, 8000);
+        }
+        setInterval(createPetal, 300);
+
+        // Aksi Tombol Lanjut (Setelah Isi Nama)
+        btnLanjut.addEventListener('click', () => {
+            namaPengguna = namaInput.value.trim();
+            if (namaPengguna === "") {
+                alert("Harap masukkan nama kamu terlebih dahulu ya! 😊");
+                return;
+            }
+            step1.style.display = 'none';
+            pertanyaanTeks.innerText = `Hai ${namaPengguna}, masih sayang aku ga?`;
+            step2.style.display = 'flex';
+        });
+
+        // Efek Tombol "Tidak" Menghindar Saat Di-hover / Disentuh
+        function pindahTombol() {
+            // Batasan area agar tidak keluar dari card
+            const x = Math.random() * 120 - 60; // Geser horizontal
+            const y = Math.random() * 100 - 150; // Geser vertikal ke atas/bawah area luar grup
+            
+            btnTidak.style.transform = `translate(${x}px, ${y}px)`;
+        }
+        btnTidak.addEventListener('mouseover', pindahTombol);
+        btnTidak.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            pindahTombol();
+        });
+
+        // Aksi Tombol "Ya"
+        btnYa.addEventListener('click', () => {
+            step2.style.display = 'none';
+            pesanAkhir.innerText = `Yeay! I Love You Too, ${namaPengguna}! 💖`;
+            step3.style.display = 'flex';
+        });
+    </script>
+</body>
+</html>
